@@ -14,13 +14,21 @@ namespace TestApp.UI.DataService
 
         public EmployeDataService(Func<TestAppDbContext> contextCreator)
         {
-            _contextCreator = contextCreator;
+            _contextCreator = contextCreator ?? throw new ArgumentNullException(nameof(contextCreator));
         }
 
-        public async Task<Employe> GetByIdAsync(long employeId)
+        public async Task<List<Employe>> GetAllAsync()
         {
             using var ctx = _contextCreator();
-            return await ctx.Employes.AsNoTracking().SingleOrDefaultAsync(x => x.Id == employeId);
+            return await ctx.Employes.AsNoTracking().ToListAsync();
+        }
+
+        public async Task SaveAsync(Employe employe)
+        {
+            using var ctx = _contextCreator();
+            ctx.Employes.Attach(employe);
+            ctx.Entry(employe).State = EntityState.Modified;
+            await ctx.SaveChangesAsync();
         }
     }
 }

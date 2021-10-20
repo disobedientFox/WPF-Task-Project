@@ -19,10 +19,8 @@ namespace TestApp.UI.Startup
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
 
-            builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
             builder.RegisterType<EmployeDataService>().As<IEmployeDataService>();
-            builder.RegisterType<EmployeDetailViewModel>().As<IEmployeDetailViewModel>();
-            builder.RegisterType<LookupDataService>().AsImplementedInterfaces();
+            builder.RegisterType<EditViewModel>().As<IEditViewModel>();
 
             return builder.Build();
         }

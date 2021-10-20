@@ -6,6 +6,7 @@ namespace TestApp.UI.DataService
 {
     public interface IEmployeDataService
     {
-        Task<Employe> GetByIdAsync(long employeId);
+        Task<List<Employe>> GetAllAsync();
+        Task SaveAsync(Employe employe);
     }
 }

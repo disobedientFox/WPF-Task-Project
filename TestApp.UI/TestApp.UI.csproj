@@ -95,27 +95,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DataService\IEmployeLookupDataService.cs" />
-    <Compile Include="DataService\LookupDataService.cs" />
     <Compile Include="Edit.xaml.cs">
       <DependentUpon>Edit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Event\OpenEmployeDetailViewEvent.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
-    <Compile Include="ViewModel\EmployeDetailViewModel.cs" />
-    <Compile Include="ViewModel\IEmployeDetailViewModel.cs" />
-    <Compile Include="ViewModel\INavigationViewModel.cs" />
+    <Compile Include="ViewModel\EditViewModel.cs" />
+    <Compile Include="ViewModel\IEditViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\NavigationViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\EditView.xaml.cs">
       <DependentUpon>EditView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\EmployeDetailView.xaml.cs">
-      <DependentUpon>EmployeDetailView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\NavigationView.xaml.cs">
-      <DependentUpon>NavigationView.xaml</DependentUpon>
     </Compile>
     <Page Include="Edit.xaml">
       <SubType>Designer</SubType>
@@ -136,14 +125,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\EditView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\EmployeDetailView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\NavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
