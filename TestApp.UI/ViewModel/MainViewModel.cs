@@ -1,27 +1,41 @@
-﻿using Microsoft.Win32;
-using Prism.Commands;
+﻿using Prism.Commands;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using TestApp.Model;
 using TestApp.UI.DataService;
+using TestApp.UI.Tools;
 using TestApp.UI.View;
 
 namespace TestApp.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private IEmployeDataService _employeDataService;
+        private readonly IEmployeDataService _employeDataService;
+        private readonly IDataParser _dataParser;
+        private Employe _selectedEmploye;
 
-        public ICommand ShowEditFormCommand { get; }
         public ICommand LoadFromCSVCommand { get; }
-        
+        public ICommand ShowEditFormCommand { get; }
+        public ObservableCollection<Employe> Employes { get; } = new ObservableCollection<Employe>();
 
-        public MainViewModel(IEmployeDataService employeDataService)
+
+        public Employe SelectedEmploye
+        {
+            get => _selectedEmploye;
+            
+            set
+            {
+                _selectedEmploye = value;
+                OnPropertryChanged();
+            }
+        }
+
+        public MainViewModel(IEmployeDataService employeDataService, IDataParser dataParser)
         {
             _employeDataService = employeDataService ?? throw new System.ArgumentNullException(nameof(employeDataService));
-            Employes = new ObservableCollection<Employe>();
+            _dataParser = dataParser ?? throw new System.ArgumentNullException(nameof(dataParser));
 
             ShowEditFormCommand = new DelegateCommand(OnShowEditFormExecute, OnShowEditFormCanExecute);
             LoadFromCSVCommand = new DelegateCommand(OnLoadFromCSVExecute);
@@ -29,9 +43,16 @@ namespace TestApp.UI.ViewModel
 
         private void OnLoadFromCSVExecute()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "CSV Files (*.csv*)|*.csv*";
-            openFileDialog.ShowDialog();
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Title = "Select A File";
+            openDialog.Filter = "CSV Files (*.csv*)|*.csv*";
+
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                string file = openDialog.FileName;
+                var records = _dataParser.Parse<Employe>(file);
+                _employeDataService.InsertBatch(records);
+            }
         }
 
         private bool OnShowEditFormCanExecute()
@@ -60,20 +81,6 @@ namespace TestApp.UI.ViewModel
             foreach (var item in employes)
             {
                 Employes.Add(item);
-            }
-        }
-
-        public ObservableCollection<Employe> Employes { get; }
-
-        private Employe _selectedEmploye;
-
-        public Employe SelectedEmploye
-        {
-            get { return _selectedEmploye; }
-            set
-            {
-                _selectedEmploye = value;
-                OnPropertryChanged();
             }
         }
     }

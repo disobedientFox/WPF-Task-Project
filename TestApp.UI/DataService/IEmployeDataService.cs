@@ -6,7 +6,8 @@ namespace TestApp.UI.DataService
 {
     public interface IEmployeDataService
     {
-        Task<List<Employe>> GetAllAsync();
+        Task<IEnumerable<Employe>> GetAllAsync();
+        Task InsertBatch(IEnumerable<Employe> employes);
         Task SaveAsync(Employe employe);
     }
 }

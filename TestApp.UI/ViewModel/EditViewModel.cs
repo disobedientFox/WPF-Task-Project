@@ -1,11 +1,8 @@
 ﻿using Prism.Commands;
-using Prism.Events;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using TestApp.Model;
 using TestApp.UI.DataService;
-using TestApp.UI.Event;
 
 namespace TestApp.UI.ViewModel
 {

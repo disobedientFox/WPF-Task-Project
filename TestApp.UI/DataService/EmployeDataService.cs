@@ -17,10 +17,10 @@ namespace TestApp.UI.DataService
             _contextCreator = contextCreator ?? throw new ArgumentNullException(nameof(contextCreator));
         }
 
-        public async Task<List<Employe>> GetAllAsync()
+        public async Task<IEnumerable<Employe>> GetAllAsync()
         {
             using var ctx = _contextCreator();
-            return await ctx.Employes.AsNoTracking().ToListAsync();
+            return await ctx.Employes.AsNoTracking().ToListAsync().ConfigureAwait(false);
         }
 
         public async Task SaveAsync(Employe employe)
@@ -28,7 +28,14 @@ namespace TestApp.UI.DataService
             using var ctx = _contextCreator();
             ctx.Employes.Attach(employe);
             ctx.Entry(employe).State = EntityState.Modified;
-            await ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task InsertBatch(IEnumerable<Employe> employes)
+        {
+            using var ctx = _contextCreator();
+            ctx.Employes.AddRange(employes);
+            await ctx.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

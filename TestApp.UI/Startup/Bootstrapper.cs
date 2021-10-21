@@ -2,6 +2,7 @@
 using Prism.Events;
 using TestApp.DataAccess;
 using TestApp.UI.DataService;
+using TestApp.UI.Tools;
 using TestApp.UI.ViewModel;
 
 namespace TestApp.UI.Startup
@@ -21,6 +22,7 @@ namespace TestApp.UI.Startup
 
             builder.RegisterType<EmployeDataService>().As<IEmployeDataService>();
             builder.RegisterType<EditViewModel>().As<IEditViewModel>();
+            builder.RegisterType<CSVParser>().As<IDataParser>();
 
             return builder.Build();
         }
