@@ -21,9 +21,9 @@ namespace TestApp.UI.ViewModel
             return true;
         }
 
-        private void OnSaveExecute()
+        private async void OnSaveExecute()
         {
-            throw new NotImplementedException();
+            await _dataService.SaveAsync(Employe);
         }
 
         public void Load(Employe employe)

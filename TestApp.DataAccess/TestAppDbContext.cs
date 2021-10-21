@@ -1,6 +1,6 @@
-﻿using System.Data.Entity;
+﻿using TestApp.Model;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using TestApp.Model;
 
 namespace TestApp.DataAccess
 {

@@ -41,7 +41,7 @@ namespace TestApp.UI.ViewModel
             LoadFromCSVCommand = new DelegateCommand(OnLoadFromCSVExecute);
         }
 
-        private void OnLoadFromCSVExecute()
+        private async void OnLoadFromCSVExecute()
         {
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Title = "Select A File";
@@ -51,8 +51,10 @@ namespace TestApp.UI.ViewModel
             {
                 string file = openDialog.FileName;
                 var records = _dataParser.Parse<Employe>(file);
-                _employeDataService.InsertBatch(records);
+                await _employeDataService.InsertBatch(records);
             }
+
+            await LoadAsync();
         }
 
         private bool OnShowEditFormCanExecute()
