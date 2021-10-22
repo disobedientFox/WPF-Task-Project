@@ -25,6 +25,7 @@ namespace TestApp.UI.ViewModel
             }
         }
         public RelayCommand<IClosable> SaveCommand { get; }
+        public RelayCommand<IClosable> CloseCommand { get; }
 
         public EditViewModel(IEmployeDataService dataService, IEventAggregator eventAggregator)
         {
@@ -32,6 +33,7 @@ namespace TestApp.UI.ViewModel
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
             SaveCommand = new RelayCommand<IClosable>(OnSaveExecute);
+            CloseCommand = new RelayCommand<IClosable>(OnCloseExecute);
         }
 
         public async Task Load(long id)
@@ -42,8 +44,14 @@ namespace TestApp.UI.ViewModel
         private async void OnSaveExecute(IClosable window)
         {
             await _dataService.SaveAsync(Employe.Model);
-            _eventAggregator.GetEvent<EditCompleteEvent>().Publish();
-            MessageBox.Show("Employe has benn updated");
+            _eventAggregator.GetEvent<EditCompleteEvent>().Publish(true);
+            MessageBox.Show("Employe has been updated");
+            CloseWindow(window);
+        }
+
+        private void OnCloseExecute(IClosable window)
+        {
+            _eventAggregator.GetEvent<EditCompleteEvent>().Publish(true);
             CloseWindow(window);
         }
 

@@ -2,7 +2,7 @@
 
 namespace TestApp.UI.Event
 {
-    public class EditCompleteEvent : PubSubEvent
+    public class EditCompleteEvent : PubSubEvent<bool>
     {
     }
 }

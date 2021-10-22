@@ -17,8 +17,16 @@ namespace TestApp.UI.ViewModel
         private readonly IDataParser _dataParser;
         private readonly IEventAggregator _eventAggregator;
         private Employe _selectedEmploye;
-        public bool IsEditViewOpen { get; set; }
-
+        private bool _isEditViewClose = true;
+        public bool IsEditViewClose
+        {
+            get => _isEditViewClose;
+            set
+            {
+                _isEditViewClose = value;
+                OnPropertryChanged();
+            }
+        }
 
         public Employe SelectedEmploye
         {
@@ -42,11 +50,18 @@ namespace TestApp.UI.ViewModel
             _eventAggregator = eventAggregator ?? throw new System.ArgumentNullException(nameof(eventAggregator));
 
             OpenEditViewCommand = new DelegateCommand(async () => await OnOpenEditViewExecuteAsync(), OnOpenEditViewCanExecute)
-                .ObservesProperty(() => SelectedEmploye).ObservesProperty(() => IsEditViewOpen);
+                .ObservesProperty(() => SelectedEmploye).ObservesProperty(() => IsEditViewClose);
             LoadFromCSVCommand = new DelegateCommand(OnLoadFromCSVExecute);
 
-            //_eventAggregator.GetEvent<EditCompleteEvent>()
-            //    .Subscribe(LoadAsync);
+            _eventAggregator.GetEvent<EditCompleteEvent>()
+                .Subscribe(ListReload);
+        }
+
+        private void ListReload(bool parameter)
+        {
+            IsEditViewClose = parameter;
+            SelectedEmploye = null;
+            Task.WhenAll(LoadAsync());
         }
 
         public async Task LoadAsync()

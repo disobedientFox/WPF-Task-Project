@@ -27,7 +27,7 @@ namespace TestApp.UI.ViewModel
 
         private bool OnOpenEditViewCanExecute()
         {
-            return SelectedEmploye != null && !IsEditViewOpen;
+            return SelectedEmploye != null && IsEditViewClose;
         }
 
         private async Task OnOpenEditViewExecuteAsync()
@@ -37,8 +37,8 @@ namespace TestApp.UI.ViewModel
 
             EditView editView = new EditView();
             editView.DataContext = editViewModel;
+            IsEditViewClose = false;
             editView.Show();
-            IsEditViewOpen = true;
         }
     }
 }

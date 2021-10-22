@@ -15,7 +15,7 @@ namespace TestApp.UI.Startup
 
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 
-            builder.RegisterType<TestAppDbContext>().AsSelf();
+            builder.RegisterType<TestAppDbContext>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();

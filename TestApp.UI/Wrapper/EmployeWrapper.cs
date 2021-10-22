@@ -35,13 +35,14 @@ namespace TestApp.UI.Wrapper
             set => SetValue(value);
         }
 
+        // Custom validation. Not really needed. Just an example
         protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
             switch (propertyName)
             {
                 case nameof(FirstName):
-                    if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
-                        yield return "No-no-no";
+                    if (string.Equals(FirstName, "Volan De Mord", StringComparison.OrdinalIgnoreCase))
+                        yield return "Awadakedawra!";
                     break;
             }
         }
