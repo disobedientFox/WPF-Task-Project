@@ -8,7 +8,7 @@ using TestApp.UI.ViewModel;
 
 namespace TestApp.UI.Wrapper
 {
-    public partial class EmployeWrapper : ViewModelBase, INotifyDataErrorInfo
+    public class NotifyDataErrorInfoBase : ViewModelBase, INotifyDataErrorInfo
     {
         private Dictionary<string, List<string>> _errorByPropertyName =
             new Dictionary<string, List<string>>();
@@ -24,12 +24,12 @@ namespace TestApp.UI.Wrapper
                 : null;
         }
 
-        private void OnErrorsChanged(string propertyName)
+        protected virtual void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
-        private void AddError(string propertyName, string error)
+        protected void AddError(string propertyName, string error)
         {
             if (!_errorByPropertyName.ContainsKey(propertyName))
             {
@@ -41,7 +41,7 @@ namespace TestApp.UI.Wrapper
                 OnErrorsChanged(propertyName);
             }
         }
-        private void ClearErrors(string propertyName)
+        protected void ClearErrors(string propertyName)
         {
             if(_errorByPropertyName.ContainsKey(propertyName))
             {

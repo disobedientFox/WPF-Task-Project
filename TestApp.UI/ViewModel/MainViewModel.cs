@@ -17,6 +17,8 @@ namespace TestApp.UI.ViewModel
         private readonly IDataParser _dataParser;
         private readonly IEventAggregator _eventAggregator;
         private Employe _selectedEmploye;
+        public bool IsEditViewOpen { get; set; }
+
 
         public Employe SelectedEmploye
         {
@@ -39,7 +41,8 @@ namespace TestApp.UI.ViewModel
             _dataParser = dataParser ?? throw new System.ArgumentNullException(nameof(dataParser));
             _eventAggregator = eventAggregator ?? throw new System.ArgumentNullException(nameof(eventAggregator));
 
-            OpenEditViewCommand = new DelegateCommand(async() => await OnOpenEditViewExecuteAsync(), OnOpenEditViewCanExecute).ObservesProperty(() => SelectedEmploye);
+            OpenEditViewCommand = new DelegateCommand(async () => await OnOpenEditViewExecuteAsync(), OnOpenEditViewCanExecute)
+                .ObservesProperty(() => SelectedEmploye).ObservesProperty(() => IsEditViewOpen);
             LoadFromCSVCommand = new DelegateCommand(OnLoadFromCSVExecute);
 
             //_eventAggregator.GetEvent<EditCompleteEvent>()

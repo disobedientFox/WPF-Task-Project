@@ -8,65 +8,42 @@ using TestApp.UI.ViewModel;
 
 namespace TestApp.UI.Wrapper
 {
-    public partial class EmployeWrapper : ViewModelBase, INotifyDataErrorInfo
+    public partial class EmployeWrapper : ModelWrapper<Employe>
     {
-        public Employe Model;
+        public EmployeWrapper(Employe model) : base(model) { }
 
         public long Id { get => Model.Id; }
         public string FirstName
         {
-            get => Model.FirstName;
-            set
-            {
-                Model.FirstName = value;
-                OnPropertryChanged();
-                ValidateProperty(nameof(FirstName));
-            }
-        }
-
-        private void ValidateProperty(string propertyName)
-        {
-            ClearErrors(propertyName);
-            switch(propertyName)
-            {
-                case nameof(FirstName):
-                    if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
-                        AddError(propertyName, "No-no-no");
-                    break;
-            }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         public string LastName
         {
-            get => Model.LastName;
-            set
-            {
-                Model.LastName = value;
-                OnPropertryChanged();
-            }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
         public string Email
         {
-            get => Model.Email;
-            set
-            {
-                Model.Email = value;
-                OnPropertryChanged();
-            }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
         public string Number
         {
-            get => Model.Number;
-            set
-            {
-                Model.Number = value;
-                OnPropertryChanged();
-            }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
-        public EmployeWrapper(Employe employe)
+        protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
-            Model = employe;
+            switch (propertyName)
+            {
+                case nameof(FirstName):
+                    if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
+                        yield return "No-no-no";
+                    break;
+            }
         }
     }
 }

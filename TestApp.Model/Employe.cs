@@ -10,10 +10,13 @@ namespace TestApp.Model
         [StringLength(30)]
         public string FirstName { get; set; }
 
+        [Required]
         [StringLength(30)]
         public string LastName { get; set; }
 
+        [Required]
         [StringLength(50)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [StringLength(15)]
