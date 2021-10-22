@@ -1,25 +1,22 @@
-﻿using Prism.Commands;
+﻿using GalaSoft.MvvmLight.Command;
+using Prism.Commands;
+using Prism.Events;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Input;
 using TestApp.Model;
 using TestApp.UI.DataService;
+using TestApp.UI.Event;
 using TestApp.UI.Tools;
-using TestApp.UI.View;
 
 namespace TestApp.UI.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly IEmployeDataService _employeDataService;
         private readonly IDataParser _dataParser;
+        private readonly IEventAggregator _eventAggregator;
         private Employe _selectedEmploye;
-
-        public ICommand LoadFromCSVCommand { get; }
-        public ICommand ShowEditFormCommand { get; }
-        public ObservableCollection<Employe> Employes { get; } = new ObservableCollection<Employe>();
-
 
         public Employe SelectedEmploye
         {
@@ -31,49 +28,22 @@ namespace TestApp.UI.ViewModel
                 OnPropertryChanged();
             }
         }
+        public ICommand LoadFromCSVCommand { get; }
+        public ICommand OpenEditViewCommand { get; }
+        public ObservableCollection<Employe> Employes { get; } = new ObservableCollection<Employe>();
 
-        public MainViewModel(IEmployeDataService employeDataService, IDataParser dataParser)
+
+        public MainViewModel(IEmployeDataService employeDataService, IDataParser dataParser, IEventAggregator eventAggregator)
         {
             _employeDataService = employeDataService ?? throw new System.ArgumentNullException(nameof(employeDataService));
             _dataParser = dataParser ?? throw new System.ArgumentNullException(nameof(dataParser));
+            _eventAggregator = eventAggregator ?? throw new System.ArgumentNullException(nameof(eventAggregator));
 
-            ShowEditFormCommand = new DelegateCommand(OnShowEditFormExecute, OnShowEditFormCanExecute);
+            OpenEditViewCommand = new DelegateCommand(async() => await OnOpenEditViewExecuteAsync(), OnOpenEditViewCanExecute).ObservesProperty(() => SelectedEmploye);
             LoadFromCSVCommand = new DelegateCommand(OnLoadFromCSVExecute);
-        }
 
-        private async void OnLoadFromCSVExecute()
-        {
-            OpenFileDialog openDialog = new OpenFileDialog();
-            openDialog.Title = "Select A File";
-            openDialog.Filter = "CSV Files (*.csv*)|*.csv*";
-
-            if (openDialog.ShowDialog() == DialogResult.OK)
-            {
-                string file = openDialog.FileName;
-                var records = _dataParser.Parse<Employe>(file);
-                await _employeDataService.InsertBatch(records);
-            }
-
-            await LoadAsync();
-        }
-
-        private bool OnShowEditFormCanExecute()
-        {
-            /*if (SelectedEmploye != null)
-                return true;
-            else
-                return false;*/
-            return true;
-        }
-
-        private void OnShowEditFormExecute()
-        {
-            EditViewModel editViewModel = new EditViewModel(_employeDataService);
-            editViewModel.Load(SelectedEmploye);
-
-            EditView editView = new EditView();
-            editView.DataContext = editViewModel;
-            editView.Show();
+            //_eventAggregator.GetEvent<EditCompleteEvent>()
+            //    .Subscribe(LoadAsync);
         }
 
         public async Task LoadAsync()

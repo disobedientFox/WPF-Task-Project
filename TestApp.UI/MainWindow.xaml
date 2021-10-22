@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestApp.UI"
         xmlns:view="clr-namespace:TestApp.UI.View"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Unique fantastic application title" Height="450" Width="800" FontSize="20">
+        Title="List of employes" Height="450" Width="800" FontSize="20">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -18,13 +19,14 @@
                     Command="{Binding LoadFromCSVCommand}"/>
         </StackPanel>
         
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Employes}" CanUserReorderColumns="True" IsReadOnly="True" 
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Employes}" CanUserReorderColumns="True" IsReadOnly="True" SelectionMode="Single"
           CanUserResizeRows="False" CanUserSortColumns="True" SelectedItem="{Binding SelectedEmploye}">
         </DataGrid>
         
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button Content="Edit" Width="125" Margin="10"
-                    Command="{Binding ShowEditFormCommand}"/>
+                    Name="EditButton"
+                    Command="{Binding OpenEditViewCommand}"/>
         </StackPanel>
     </Grid>
 </Window>

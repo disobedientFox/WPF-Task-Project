@@ -1,47 +1,58 @@
-﻿using Prism.Commands;
+﻿using GalaSoft.MvvmLight.Command;
+using Prism.Events;
 using System;
-using System.Windows.Input;
-using TestApp.Model;
+using System.Threading.Tasks;
+using System.Windows;
 using TestApp.UI.DataService;
+using TestApp.UI.Event;
+using TestApp.UI.Interface;
+using TestApp.UI.Wrapper;
 
 namespace TestApp.UI.ViewModel
 {
     class EditViewModel : ViewModelBase, IEditViewModel
     {
-        private IEmployeDataService _dataService;
+        private readonly IEmployeDataService _dataService;
+        private readonly IEventAggregator _eventAggregator;
+        private EmployeWrapper _employe;
 
-        public EditViewModel(IEmployeDataService dataService)
-        {
-            _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
-            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
-        }
-
-        private bool OnSaveCanExecute()
-        {
-            return true;
-        }
-
-        private async void OnSaveExecute()
-        {
-            await _dataService.SaveAsync(Employe);
-        }
-
-        public void Load(Employe employe)
-        {
-            Employe = employe;
-        }
-        private Employe _employe;
-
-        public Employe Employe
+        public EmployeWrapper Employe
         {
             get { return _employe; }
             private set
             {
                 _employe = value;
-                OnPropertryChanged();
             }
         }
+        public RelayCommand<IClosable> SaveCommand { get; }
 
-        public ICommand SaveCommand { get; }
+        public EditViewModel(IEmployeDataService dataService, IEventAggregator eventAggregator)
+        {
+            _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+
+            SaveCommand = new RelayCommand<IClosable>(OnSaveExecute);
+        }
+
+        public async Task Load(long id)
+        {
+            var employe = await _dataService.GetByIdAsync(id);
+            Employe = new EmployeWrapper(employe);
+        }
+        private async void OnSaveExecute(IClosable window)
+        {
+            await _dataService.SaveAsync(Employe.Model);
+            _eventAggregator.GetEvent<EditCompleteEvent>().Publish();
+            MessageBox.Show("Employe has benn updated");
+            CloseWindow(window);
+        }
+
+        private void CloseWindow(IClosable window)
+        {
+            if (window != null)
+            {
+                window.Close();
+            }
+        }
     }
 }

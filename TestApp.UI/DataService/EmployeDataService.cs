@@ -17,6 +17,12 @@ namespace TestApp.UI.DataService
             _contextCreator = contextCreator ?? throw new ArgumentNullException(nameof(contextCreator));
         }
 
+        public async Task<Employe> GetByIdAsync(long id)
+        {
+            using var ctx = _contextCreator();
+            return await ctx.Employes.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+        }
+
         public async Task<IEnumerable<Employe>> GetAllAsync()
         {
             using var ctx = _contextCreator();

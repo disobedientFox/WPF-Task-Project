@@ -1,9 +1,10 @@
-﻿using TestApp.Model;
+﻿using System.Threading.Tasks;
+using TestApp.Model;
 
 namespace TestApp.UI.ViewModel
 {
     public interface IEditViewModel
     {
-        void Load(Employe employe);
+        Task Load(long id);
     }
 }
